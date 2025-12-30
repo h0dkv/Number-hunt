@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Number Hunt</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1d2671, #c33764);
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    background: rgba(0,0,0,0.4);
+    padding: 30px;
+    border-radius: 20px;
+    width: 320px;
+    text-align: center;
+    animation: pop 0.6s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+button {
+    background: #4CAF50;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background: #66ff99;
+}
+
+input {
+    width: 120px;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 8px;
+    border: none;
+    margin: 10px 0;
+}
+
+#status {
+    margin-top: 15px;
+    min-height: 40px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🎮 Number Hunt</h1>
+
+    <div>
+        <button onclick="start(20,6)">Easy</button>
+        <button onclick="start(50,7)">Medium</button>
+        <button onclick="start(100,8)">Hard</button>
+    </div>
+
+    <input id="guess" placeholder="Your guess">
+    <br>
+    <button onclick="check()">Guess</button>
+
+    <div id="status">Choose a difficulty</div>
+</div>
+
+<script>
+let secret = null;
+let tries = 0;
+
+function start(max, attempts) {
+    secret = Math.floor(Math.random() * max) + 1;
+    tries = attempts;
+    status(`Guess 1–${max} | Attempts: ${tries}`);
+}
+
+function check() {
+    if (!secret) return;
+    const input = document.getElementById("guess");
+    const g = Number(input.value);
+    if (!g) return status("❌ Enter a number");
+
+    tries--;
+
+    if (g < secret) status(`⬇ Too low | ${tries} left`);
+    else if (g > secret) status(`⬆ Too high | ${tries} left`);
+    else return status("🎉 YOU WIN!"), secret = null;
+
+    if (tries === 0) {
+        status(`💀 Game over! Number was ${secret}`);
+        secret = null;
+    }
+
+    input.value = "";
+}
+
+function status(msg) {
+    document.getElementById("status").innerText = msg;
+}
+</script>
+
+</body>
+</html>
